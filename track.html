@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio QR</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      cursor: pointer;
+    }
+    .btn {
+      font-size: 3rem;
+      background: #2563eb;
+      width: 90px;
+      height: 90px;
+      line-height: 90px;
+      border-radius: 50%;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    }
+  </style>
+</head>
+<body id="screen">
+  <div class="btn">▶</div>
+  <h2 id="status">Toca para reproducir</h2>
+  
+  <audio id="player" preload="auto"></audio>
+
+  <script>
+    // Obtiene el parámetro de la URL: ?track=track1
+    const params = new URLSearchParams(window.location.search);
+    const trackName = params.get('track');
+    const player = document.getElementById('player');
+    const statusText = document.getElementById('status');
+
+    if (trackName) {
+      player.src = `audios/${trackName}.mp3`;
+    } else {
+      statusText.textContent = "Audio no especificado.";
+    }
+
+    // Reproduce al primer toque en cualquier parte de la pantalla
+    document.getElementById('screen').addEventListener('click', () => {
+      if (!trackName) return;
+      player.play().then(() => {
+        statusText.textContent = "Reproduciendo...";
+      }).catch(err => {
+        statusText.textContent = "Error al reproducir.";
+      });
+    }, { once: true });
+  </script>
+</body>
+</html>
